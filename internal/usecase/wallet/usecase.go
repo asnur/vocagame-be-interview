@@ -1,4 +1,4 @@
-package user
+package wallet
 
 import (
 	"github.com/asnur/vocagame-be-interview/internal/outbound"
@@ -8,9 +8,9 @@ import (
 
 type (
 	UseCase interface {
-		IRegister
-		ILogin
-		IProfile
+		ICreateWallet
+		IDeposit
+		IWithDrawl
 	}
 
 	usecase struct {

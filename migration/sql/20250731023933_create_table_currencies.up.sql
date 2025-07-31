@@ -5,4 +5,10 @@ CREATE TABLE currencies (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL
-)
+);
+
+INSERT INTO currencies (code, name) VALUES
+  ('USD', 'United States Dollar'),
+  ('EUR', 'Euro'),
+  ('JPY', 'Japanese Yen'),
+  ('IDR', 'Indonesian Rupiah');

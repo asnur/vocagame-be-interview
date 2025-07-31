@@ -1,24 +1,22 @@
-package shared
+package wallet
 
 import "github.com/asnur/vocagame-be-interview/pkg/resource"
 
 type (
-	UseCase interface {
-		IHashPassword
-		ICheckPassword
-		IAuthToken
-		IValidateToken
+	Repository interface {
+		ICreate
+		IGet
 	}
 
-	usecase struct {
+	repository struct {
 		resource resource.Resource
 	}
 )
 
 func New(
 	resource resource.Resource,
-) UseCase {
-	return &usecase{
+) Repository {
+	return &repository{
 		resource: resource,
 	}
 }

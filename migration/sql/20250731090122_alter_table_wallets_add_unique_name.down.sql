@@ -1,0 +1,1 @@
+ALTER TABLE wallets DROP CONSTRAINT unique_wallet_name;

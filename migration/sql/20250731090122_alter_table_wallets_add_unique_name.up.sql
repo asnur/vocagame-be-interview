@@ -1,0 +1,1 @@
+ALTER TABLE wallets ADD CONSTRAINT unique_wallet_name UNIQUE (name,user_id);

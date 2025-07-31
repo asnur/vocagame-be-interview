@@ -17,7 +17,7 @@ type (
 	}
 )
 
-func (u RegisterRequest) ToObModel() obModel.Users {
+func (u RegisterRequest) ToObUserModel() obModel.Users {
 	return obModel.Users{
 		Username: u.Username,
 		Password: u.Password,

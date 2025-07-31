@@ -2,6 +2,7 @@ package user
 
 import (
 	ibModel "github.com/asnur/vocagame-be-interview/internal/inbound/http/model/user"
+	pkgErr "github.com/asnur/vocagame-be-interview/pkg/errors"
 	"github.com/asnur/vocagame-be-interview/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,7 +16,9 @@ func (c *Controller) Login(fCtx *fiber.Ctx) error {
 
 	loginResponse, err := c.UseCase.User.Login(fCtx.UserContext(), req.ToUcModel())
 	if err != nil {
-		return utils.Response(fCtx, fiber.StatusInternalServerError, "Failed to login user", nil, err)
+		status, err := pkgErr.ErrorResPonse(err)
+
+		return utils.Response(fCtx, status, "Failed to login user", nil, err)
 	}
 
 	return utils.Response(fCtx, fiber.StatusOK, "User logged in successfully", loginResponse, nil)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/asnur/vocagame-be-interview/internal/usecase/shared"
 	"github.com/asnur/vocagame-be-interview/internal/usecase/user"
+	"github.com/asnur/vocagame-be-interview/internal/usecase/wallet"
 	"go.uber.org/dig"
 )
 
@@ -15,6 +16,8 @@ type (
 		Shared shared.UseCase
 
 		User user.UseCase
+
+		Wallet wallet.UseCase
 	}
 )
 
@@ -26,6 +29,10 @@ func Register(container *dig.Container) error {
 	// Register User
 	if err := container.Provide(user.New); err != nil {
 		return fmt.Errorf("[DI] failed to register User Use Case: %w", err)
+	}
+	// Register Wallet
+	if err := container.Provide(wallet.New); err != nil {
+		return fmt.Errorf("[DI] failed to register Wallet Use Case: %w", err)
 	}
 
 	// You can register other use cases here as needed

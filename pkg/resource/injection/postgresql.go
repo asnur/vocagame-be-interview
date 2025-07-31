@@ -2,10 +2,14 @@ package injection
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"time"
 
 	"github.com/asnur/vocagame-be-interview/pkg/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type SQL struct {
@@ -22,7 +26,20 @@ func NewPostgres(config config.PostgresConfig) (SQL, error) {
 		config.PostgresDB,
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), nil)
+	// Configure GORM logger
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Second, // Slow SQL threshold
+			LogLevel:                  logger.Info, // Log level (Silent, Error, Warn, Info)
+			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+			Colorful:                  true,        // Enable color
+		},
+	)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: newLogger,
+	})
 	if err != nil {
 		return SQL{}, fmt.Errorf("failed to connect to postgres: %w", err)
 	}
