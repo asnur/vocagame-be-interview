@@ -5,6 +5,7 @@ import (
 
 	"github.com/asnur/vocagame-be-interview/internal/outbound/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func (r *repository) GetAll(ctx context.Context, orm *gorm.DB, transaction model.Transaction) ([]model.Transaction, error) {
@@ -13,7 +14,7 @@ func (r *repository) GetAll(ctx context.Context, orm *gorm.DB, transaction model
 		err          error
 	)
 
-	if err = orm.WithContext(ctx).Where(transaction).Find(&transactions).Error; err != nil {
+	if err = orm.WithContext(ctx).Preload(clause.Associations).Where(transaction).Find(&transactions).Error; err != nil {
 		return nil, err
 	}
 

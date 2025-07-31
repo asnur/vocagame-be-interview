@@ -188,6 +188,7 @@ func (u *usecase) Transfer(ctx context.Context, req ucModel.TransferRequest) (uc
 	trxIdFrom := fmt.Sprintf("%s-%d-%d", strings.ToUpper(pkgConstant.Transfer), fromWallet.ID, time.Now().UnixNano())
 	transaction := obModel.Transaction{
 		TrxID:            trxIdFrom,
+		UserID:           req.UserID,
 		Type:             pkgConstant.Transfer,
 		WalletID:         fromWallet.ID,
 		RefrenceWalletID: &toWallet.ID,
@@ -204,6 +205,7 @@ func (u *usecase) Transfer(ctx context.Context, req ucModel.TransferRequest) (uc
 	trxIdTo := fmt.Sprintf("%s-%d-%d", strings.ToUpper(pkgConstant.Transfer), toWallet.ID, time.Now().UnixNano())
 	transaction = obModel.Transaction{
 		TrxID:            trxIdTo,
+		UserID:           toWallet.UserID,
 		Type:             pkgConstant.Transfer,
 		WalletID:         toWallet.ID,
 		RefrenceWalletID: &fromWallet.ID,

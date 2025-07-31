@@ -93,6 +93,7 @@ func (u *usecase) Payment(ctx context.Context, req ucModel.PaymentRequest) (ucMo
 	trxId := fmt.Sprintf("%s-%d-%d", strings.ToUpper(pkgConstant.Payment), wallet.ID, time.Now().UnixNano())
 	transaction := obModel.Transaction{
 		TrxID:       trxId,
+		UserID:      req.UserID,
 		WalletID:    wallet.ID,
 		CurrencyID:  currency.ID,
 		Type:        pkgConstant.Payment,

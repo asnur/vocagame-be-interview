@@ -15,9 +15,14 @@ type (
 	}
 
 	ProfileWallet struct {
-		ID      int64   `json:"id"`
-		Name    string  `json:"name"`
-		Balance float64 `json:"balance"`
+		ID       int64                  `json:"id"`
+		Name     string                 `json:"name"`
+		Balances []ProfileWalletBalance `json:"balances,omitempty"` // Changed to slice to accommodate multiple currencies
+	}
+
+	ProfileWalletBalance struct {
+		CurrencyCode string  `json:"currency_code"`
+		Balance      float64 `json:"balance"`
 	}
 )
 

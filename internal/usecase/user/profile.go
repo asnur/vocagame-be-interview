@@ -31,10 +31,16 @@ func (u *usecase) Profile(ctx context.Context, req ucModel.ProfileRequest) (ucMo
 	response.Email = user.Email
 	for _, wallet := range user.Wallets {
 		response.Wallets = append(response.Wallets, ucModel.ProfileWallet{
-			ID:      wallet.ID,
-			Name:    wallet.Name,
-			Balance: 0,
+			ID:   wallet.ID,
+			Name: wallet.Name,
 		})
+
+		for _, balance := range wallet.WalletBalance {
+			response.Wallets[len(response.Wallets)-1].Balances = append(response.Wallets[len(response.Wallets)-1].Balances, ucModel.ProfileWalletBalance{
+				CurrencyCode: balance.Currency.Code,
+				Balance:      *balance.Balance,
+			})
+		}
 	}
 
 	return response, nil

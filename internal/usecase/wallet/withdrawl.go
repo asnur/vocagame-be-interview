@@ -103,6 +103,7 @@ func (u *usecase) WithDrawl(ctx context.Context, req ucModel.WithDrawlRequest) (
 	trxId := fmt.Sprintf("%s-%d-%d", strings.ToUpper(pkgConstant.Withdrawal), req.WalletID, time.Now().UnixNano())
 	transaction := obModel.Transaction{
 		TrxID:      trxId,
+		UserID:     req.UserID,
 		WalletID:   req.WalletID,
 		CurrencyID: currency.ID,
 		Type:       pkgConstant.Withdrawal,

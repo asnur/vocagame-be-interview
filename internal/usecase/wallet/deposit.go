@@ -94,6 +94,7 @@ func (u *usecase) Deposit(ctx context.Context, req ucModel.DepositRequest) (ucMo
 	trxId := fmt.Sprintf("%s-%d-%d", strings.ToUpper(pkgConstant.Deposit), req.WalletID, time.Now().UnixNano())
 	transaction := obModel.Transaction{
 		TrxID:      trxId,
+		UserID:     req.UserID,
 		WalletID:   req.WalletID,
 		CurrencyID: currency.ID,
 		Type:       pkgConstant.Deposit,

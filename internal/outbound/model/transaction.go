@@ -5,6 +5,7 @@ type (
 		BaseModel
 		ID               int64      `gorm:"column:id;primaryKey" json:"id"`
 		TrxID            string     `gorm:"column:trx_id;not null;unique" json:"trx_id"`
+		UserID           int64      `gorm:"column:user_id;not null" json:"user_id"`
 		WalletID         int64      `gorm:"column:wallet_id;not null"`
 		Wallet           Wallets    `gorm:"foreignKey:WalletID;references:ID"`
 		CurrencyID       int64      `gorm:"column:currency_id;not null"`

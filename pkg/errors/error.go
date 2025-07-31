@@ -17,6 +17,7 @@ var (
 	ErrWalletNotFound        = errors.New("wallet not found")
 	ErrInsufficientBalance   = errors.New("insufficient balance")
 	ErrExchangeRateNotFound  = errors.New("exchange rate not found")
+	ErrTransactionNotFound   = errors.New("transaction not found")
 )
 
 func ErrorResPonse(err error) (int, error) {
@@ -28,7 +29,8 @@ func ErrorResPonse(err error) (int, error) {
 	case ErrUserNotFound,
 		ErrCurrencyNotFound,
 		ErrWalletNotFound,
-		ErrExchangeRateNotFound:
+		ErrExchangeRateNotFound,
+		ErrTransactionNotFound:
 		return http.StatusNotFound, err
 	case ErrIdentityAlreadyExists:
 		return http.StatusConflict, err
