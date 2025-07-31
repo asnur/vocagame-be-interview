@@ -334,7 +334,205 @@ CREATE TABLE exchange_rates (
 - **Implementation**: DECIMAL(20,8) for amounts and rates
 - **Trade-off**: Larger storage requirements
 
-## 🔒 Security Features
+## � Critical Considerations & Discussion Points
+
+### 1. **Race Conditions and Concurrency**
+
+#### Potential Race Conditions Identified:
+- **Balance Update Race**: Multiple concurrent deposit/withdrawal requests to the same wallet
+- **Double-Spending**: Simultaneous payment requests exceeding available balance
+- **Transfer Conflicts**: Concurrent transfers from the same source wallet
+- **Exchange Rate Updates**: Rate changes during currency conversion calculations
+
+#### Mitigation Strategies Implemented:
+
+**🔒 Database-Level Pessimistic Locking**
+```go
+// Example implementation in transfer logic
+tx.Set("gorm:query_option", "FOR UPDATE").
+    Where("wallet_id = ?", req.FromWalletID).
+    First(&fromWalletBalance)
+```
+
+**Benefits:**
+- Prevents concurrent access to critical balance data
+- Ensures atomic balance updates
+- Eliminates double-spending scenarios
+
+**Trade-offs:**
+- Potential performance bottleneck under high concurrency
+- Risk of deadlocks if not implemented carefully
+
+**🔄 Optimistic Concurrency Control (Future Enhancement)**
+```go
+type WalletBalance struct {
+    Balance   decimal.Decimal `gorm:"type:decimal(20,8)"`
+    Version   int64          `gorm:"column:version;default:1"`
+    UpdatedAt time.Time      `gorm:"autoUpdateTime"`
+}
+```
+
+**🔐 Atomic Database Transactions**
+- All financial operations wrapped in database transactions
+- Rollback capability on any failure
+- ACID compliance for data consistency
+
+**⚡ Sequential Processing via Queues (Recommended for Scale)**
+```go
+// Future implementation consideration
+type TransactionQueue struct {
+    WalletID int64
+    Tasks    chan TransactionTask
+}
+```
+
+#### Chosen Approach Justification:
+For this test scope, **pessimistic locking** provides the best balance of:
+- **Simplicity**: Easy to implement and understand
+- **Reliability**: Proven solution for financial systems
+- **Consistency**: Guarantees data integrity
+- **Performance**: Acceptable for moderate transaction volumes
+
+### 2. **Robust E-Wallet System Design Advantages**
+
+#### 🛡️ **Enhanced Security Measures**
+
+**Current Implementation:**
+- **RSA256 JWT Tokens**: Asymmetric encryption for secure authentication
+- **Password Hashing**: bcrypt with salt for secure password storage
+- **Input Validation**: Comprehensive request validation and sanitization
+- **SQL Injection Prevention**: GORM ORM with parameterized queries
+
+**Production Enhancements:**
+- **Encryption at Rest**: Database field-level encryption for sensitive data
+- **API Rate Limiting**: Prevent abuse and DDoS attacks
+- **Multi-Factor Authentication**: SMS/TOTP for high-value transactions
+- **Fraud Detection**: ML-based transaction pattern analysis
+- **PCI DSS Compliance**: For handling card data (if applicable)
+
+#### 📈 **Scalability Design**
+
+**Current Architecture Benefits:**
+- **Stateless Services**: JWT-based authentication enables horizontal scaling
+- **Clean Architecture**: Separation of concerns allows independent scaling
+- **Database Optimization**: Proper indexing and query optimization
+
+**Scaling Strategies:**
+```go
+// Microservices decomposition
+- User Service (Authentication, Profiles)
+- Wallet Service (Balance Management)
+- Transaction Service (Payment Processing)
+- Exchange Service (Currency Conversion)
+- Notification Service (Real-time updates)
+```
+
+**Infrastructure Scaling:**
+- **Database Sharding**: Partition by user_id or wallet_id
+- **Read Replicas**: Separate read/write operations
+- **Caching Layer**: Redis for frequently accessed data
+- **Load Balancing**: Distribute traffic across multiple instances
+
+#### 🔧 **Maintainability & Extensibility**
+
+**Current Design Strengths:**
+```go
+// Modular structure enables easy feature addition
+internal/
+├── inbound/     # New API endpoints
+├── usecase/     # New business logic
+└── outbound/    # New data sources
+```
+
+**Adding New Features:**
+- **New Currencies**: Simple currency table insertion
+- **New Transaction Types**: Extend transaction type enum
+- **Loyalty Programs**: New usecase layer without affecting core logic
+- **Payment Methods**: New payment providers via interface implementation
+
+**Code Maintainability:**
+- **Interface-Driven Design**: Easy mocking and testing
+- **Dependency Injection**: Loose coupling between components
+- **Clear Separation**: Business logic isolated from infrastructure
+
+#### 📝 **Auditability & Logging**
+
+**Current Implementation:**
+```go
+// Transaction audit trail
+type Transaction struct {
+    TrxID       string    `json:"trx_id"`
+    UserID      int64     `json:"user_id"`
+    Type        string    `json:"type"`
+    Amount      float64   `json:"amount"`
+    Description string    `json:"description"`
+    CreatedAt   time.Time `json:"created_at"`
+}
+```
+
+**Enhanced Logging Strategy:**
+- **Structured Logging**: JSON format for easy parsing
+- **Request Tracing**: Unique request IDs for transaction tracking
+- **Security Events**: Failed authentication attempts, suspicious activities
+- **Performance Metrics**: Response times, database query performance
+- **Compliance Logging**: Immutable audit logs for regulatory requirements
+
+#### ⚡ **User Experience (Backend Perspective)**
+
+**Performance Optimizations:**
+- **Database Indexing**: Optimized queries for fast balance retrieval
+- **Connection Pooling**: Efficient database connection management
+- **Response Caching**: Cache exchange rates and user profiles
+- **Async Processing**: Background processing for non-critical operations
+
+**Reliability Features:**
+- **Graceful Error Handling**: User-friendly error messages
+- **Data Consistency**: Strong consistency for financial operations
+- **Idempotency**: Prevent duplicate transactions from network retries
+- **Health Checks**: System monitoring and alerting
+
+#### 🛠️ **Fault Tolerance & Resilience**
+
+**Current Resilience:**
+- **Database Transactions**: Automatic rollback on failures
+- **Error Propagation**: Proper error handling throughout layers
+- **Input Validation**: Prevent invalid states from reaching business logic
+
+**Production Resilience Patterns:**
+```go
+// Circuit Breaker Pattern
+type CircuitBreaker struct {
+    FailureThreshold int
+    RecoveryTimeout  time.Duration
+    State           State // Open, Closed, HalfOpen
+}
+
+// Retry with Exponential Backoff
+func RetryWithBackoff(operation func() error, maxRetries int) error {
+    for i := 0; i < maxRetries; i++ {
+        if err := operation(); err == nil {
+            return nil
+        }
+        time.Sleep(time.Duration(1<<i) * time.Second)
+    }
+    return errors.New("max retries exceeded")
+}
+```
+
+**Failure Scenarios & Responses:**
+- **Database Connection Loss**: Connection pool retry with exponential backoff
+- **External Service Timeout**: Circuit breaker pattern with fallback
+- **Memory Exhaustion**: Graceful degradation with reduced functionality
+- **Network Partitions**: Eventual consistency with conflict resolution
+- **Partial System Failures**: Isolate failing components, maintain core functionality
+
+**Monitoring & Alerting:**
+- **Health Endpoints**: `/health` and `/ready` for load balancer checks
+- **Metrics Collection**: Prometheus/Grafana for system monitoring
+- **Error Tracking**: Sentry/Rollbar for real-time error notification
+- **Performance APM**: Application performance monitoring tools
+
+## �🔒 Security Features
 
 ### Authentication & Authorization
 - JWT tokens with RS256 signing
