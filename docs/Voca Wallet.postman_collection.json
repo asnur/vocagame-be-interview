@@ -1,0 +1,379 @@
+{
+	"info": {
+		"_postman_id": "44e9dd60-2a4f-4630-be68-bde01cea4055",
+		"name": "Voca Wallet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11577849",
+		"_collection_link": "https://orange-spaceship-837944.postman.co/workspace/Voca-Games~4416b950-a91a-4334-9bd6-6eb2682416b4/collection/11577849-44e9dd60-2a4f-4630-be68-bde01cea4055?action=share&source=collection_link&creator=11577849"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"dani\",\n    \"password\": \"12345678\",\n    \"email\": \"asnurdhani13@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Set access token to global environment variable",
+									"pm.environment.set(\"TOKEN\", response.data.access_token);",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"amelia\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/user/profile",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wallet",
+			"item": [
+				{
+					"name": "Create Wallet",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jajan\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/wallet",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deposit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currency_code\": \"USD\",\n    \"amount\": 5,\n    \"wallet_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/wallet/deposit",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"wallet",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currency_code\": \"IDR\",\n    \"amount\": 500,\n    \"wallet_id\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/wallet/withdraw",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"wallet",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_wallet_id\": 4,\n    \"from_currency_code\": \"IDR\",\n    \"to_wallet_id\": 3,\n    \"to_currency_code\": \"USD\",\n    \"amount\": 16000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/wallet/transfer",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"wallet",
+								"transfer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"wallet_id\": 4,\n    \"currency_code\": \"IDR\",\n    \"amount\": 16000,\n    \"description\": \"jajan pentol\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/wallet/payment",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"wallet",
+								"payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/wallet/balance/:wallet_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"wallet",
+								"balance",
+								":wallet_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Balance Total",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/wallet/balance/:wallet_id/total?currency_code=IDR",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"wallet",
+								"balance",
+								":wallet_id",
+								"total"
+							],
+							"query": [
+								{
+									"key": "currency_code",
+									"value": "IDR"
+								}
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/transaction",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/transaction/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"transaction",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "DEPOSIT-2-1753983831508694000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

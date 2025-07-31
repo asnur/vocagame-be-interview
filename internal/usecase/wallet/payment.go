@@ -74,7 +74,7 @@ func (u *usecase) Payment(ctx context.Context, req ucModel.PaymentRequest) (ucMo
 
 	// Validate Wallet Balance
 	if walletBalance.Balance == nil || *walletBalance.Balance < req.Amount {
-		u.resource.Logger.Errorf("[WalletUseCase] Payment: insufficient balance in wallet %s", wallet.ID)
+		u.resource.Logger.Errorf("[WalletUseCase] Payment: insufficient balance in wallet %d", wallet.ID)
 		tx.Rollback()
 		return response, pkgErr.ErrInsufficientBalance
 	}
