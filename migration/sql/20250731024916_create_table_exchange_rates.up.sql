@@ -1,0 +1,9 @@
+CREATE TABLE exchange_rates (
+    id SERIAL PRIMARY KEY,
+    from_currency_id INTEGER NOT NULL REFERENCES currencies(id) ON DELETE CASCADE,
+    to_currency_id INTEGER NOT NULL REFERENCES currencies(id) ON DELETE CASCADE,
+    rate DECIMAL(20, 10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
