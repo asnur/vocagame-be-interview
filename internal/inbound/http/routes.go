@@ -25,4 +25,9 @@ func (i Inbound) Routes(c *fiber.App) {
 	wallet.Post("/deposit", i.Wallet.Deposit)
 	wallet.Post("/withdraw", i.Wallet.WithDrawl)
 	wallet.Post("/transfer", i.Wallet.Transfer)
+	wallet.Post("/payment", i.Wallet.Payment)
+
+	balance := wallet.Group("balance")
+	balance.Get("/:wallet_id", i.Wallet.Balance)
+	balance.Get("/:wallet_id/total", i.Wallet.BalanceTotal)
 }

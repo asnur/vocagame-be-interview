@@ -12,6 +12,8 @@ type (
 		IDeposit
 		IWithDrawl
 		ITransfer
+		IPayment
+		IBalance
 	}
 
 	usecase struct {

@@ -6,6 +6,7 @@ type (
 	Repository interface {
 		IUpdate
 		IGet
+		IGetAll
 	}
 
 	repository struct {

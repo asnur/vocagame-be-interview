@@ -5,6 +5,7 @@ import "github.com/asnur/vocagame-be-interview/pkg/resource"
 type (
 	Repository interface {
 		IGet
+		IGetAll
 	}
 
 	repository struct {
