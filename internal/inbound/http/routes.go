@@ -24,4 +24,5 @@ func (i Inbound) Routes(c *fiber.App) {
 	wallet.Post("/", i.Wallet.CreateWallet)
 	wallet.Post("/deposit", i.Wallet.Deposit)
 	wallet.Post("/withdraw", i.Wallet.WithDrawl)
+	wallet.Post("/transfer", i.Wallet.Transfer)
 }

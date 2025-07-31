@@ -106,7 +106,7 @@ func (u *usecase) WithDrawl(ctx context.Context, req ucModel.WithDrawlRequest) (
 		WalletID:   req.WalletID,
 		CurrencyID: currency.ID,
 		Type:       pkgConstant.Withdrawal,
-		Amount:     amount,
+		Amount:     req.Amount,
 	}
 
 	_, err = u.Repository.Transaction.Create(ctx, tx, transaction)

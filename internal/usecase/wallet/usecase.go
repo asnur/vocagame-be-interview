@@ -11,6 +11,7 @@ type (
 		ICreateWallet
 		IDeposit
 		IWithDrawl
+		ITransfer
 	}
 
 	usecase struct {

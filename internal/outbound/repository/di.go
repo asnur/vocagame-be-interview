@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/asnur/vocagame-be-interview/internal/outbound/repository/currencies"
+	"github.com/asnur/vocagame-be-interview/internal/outbound/repository/exchange_rate"
 	"github.com/asnur/vocagame-be-interview/internal/outbound/repository/transaction"
 	"github.com/asnur/vocagame-be-interview/internal/outbound/repository/user"
 	"github.com/asnur/vocagame-be-interview/internal/outbound/repository/wallet"
@@ -14,6 +15,8 @@ import (
 type (
 	Repository struct {
 		dig.In
+
+		ExchangeRate exchange_rate.Repository
 
 		Transaction transaction.Repository
 
@@ -51,6 +54,11 @@ func Register(container *dig.Container) error {
 	// Register Transaction Repository
 	if err := container.Provide(transaction.New); err != nil {
 		return fmt.Errorf("[DI] failed to register Transaction Repository: %w", err)
+	}
+
+	// Register Exchange Rate Repository
+	if err := container.Provide(exchange_rate.New); err != nil {
+		return fmt.Errorf("[DI] failed to register Exchange Rate Repository: %w", err)
 	}
 
 	return nil
